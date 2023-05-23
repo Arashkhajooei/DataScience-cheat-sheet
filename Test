@@ -1,0 +1,287 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/arashkhgit/DataScience-cheat-sheet/blob/main/Test\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "rAukFexNRiZ9",
+        "outputId": "d0f6467e-ccc1-425b-d29b-e0974e1db160"
+      },
+      "outputs": [
+        {
+          "name": "stdout",
+          "output_type": "stream",
+          "text": [
+            "Looking in indexes: https://pypi.org/simple, https://us-python.pkg.dev/colab-wheels/public/simple/\n",
+            "Requirement already satisfied: google in /usr/local/lib/python3.10/dist-packages (2.0.3)\n",
+            "Requirement already satisfied: beautifulsoup4 in /usr/local/lib/python3.10/dist-packages (from google) (4.11.2)\n",
+            "Requirement already satisfied: soupsieve>1.2 in /usr/local/lib/python3.10/dist-packages (from beautifulsoup4->google) (2.4.1)\n"
+          ]
+        }
+      ],
+      "source": [
+        "!pip install google"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "uCity4Y4RmOR"
+      },
+      "outputs": [],
+      "source": [
+        "from googlesearch import search"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "TG08fYNIReYj"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "try:\n",
+        "    from googlesearch import search\n",
+        "except ImportError:\n",
+        "    print(\"No module named 'google' found\")\n",
+        "\n",
+        "# to search\n",
+        "query = \"ibm\"\n",
+        "\n",
+        "for j in search(query, tld=\"co.in\", num=20, stop=20, pause=5):\n",
+        "    print(j)\n",
+        "\n",
+        "\n",
+        "\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import time\n",
+        "try:\n",
+        "    from googlesearch import search\n",
+        "except ImportError:\n",
+        "    print(\"No module named 'google' found\")\n",
+        "\n",
+        "# Set the desired number of search results per batch\n",
+        "results_per_batch = 20\n",
+        "\n",
+        "# Set the total number of search results you want to fetch\n",
+        "total_results = 100\n",
+        "\n",
+        "# Define your search query\n",
+        "query = \"ibm\"\n",
+        "\n",
+        "# Perform the search and get the results\n",
+        "results = []\n",
+        "\n",
+        "iterations = total_results // results_per_batch  # Number of iterations needed\n",
+        "\n",
+        "for i in range(iterations):\n",
+        "    batch_start = i * results_per_batch\n",
+        "\n",
+        "    # Fetch results for the current batch\n",
+        "    batch_results = list(search(query, tld=\"co.in\", num=results_per_batch, start=batch_start, pause=5))\n",
+        "\n",
+        "    # Append batch results to the main results list\n",
+        "    results.extend(batch_results)\n",
+        "\n",
+        "    # Print the batch results\n",
+        "    for j, result in enumerate(batch_results, start=batch_start+1):\n",
+        "        print(f\"Result {j}: {result}\")\n",
+        "\n",
+        "    # Pause between batches\n",
+        "    if i < iterations - 1:\n",
+        "        time.sleep(10)  # Adjust the pause duration as needed\n",
+        "\n",
+        "# Print the total number of results fetched\n",
+        "print(f\"Total results fetched: {len(results)}\")"
+      ],
+      "metadata": {
+        "id": "opuDfDm7QNwI"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "YjNZLWjHRogI"
+      },
+      "outputs": [],
+      "source": [
+        "import time\n",
+        "from googlesearch import search\n",
+        "\n",
+        "query = \"ibm\"\n",
+        "num_results = 20\n",
+        "batch_size = 5\n",
+        "pause_between_batches = 5  # Pause in seconds between batches (adjust if needed)\n",
+        "\n",
+        "results = []\n",
+        "\n",
+        "# Perform the search in batches\n",
+        "for i in range(0, num_results, batch_size):\n",
+        "    # Set the number of results\n",
+        "    num = min(batch_size, num_results - i)\n",
+        "\n",
+        "    # Perform the search and store the results\n",
+        "    try:\n",
+        "        search_results = search(query, num=num, pause=pause_between_batches)\n",
+        "        results.extend(search_results)\n",
+        "    except Exception as e:\n",
+        "        print(f\"An error occurred: {e}\")\n",
+        "    \n",
+        "    # Delay between batches to avoid \"Too Many Requests\" error\n",
+        "    time.sleep(pause_between_batches)\n",
+        "\n",
+        "# Print the search results\n",
+        "for result in results:\n",
+        "    print(result)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from googlesearch import search\n",
+        "import time\n",
+        "\n",
+        "def fetch_search_results(query, num_results=100, batch_size=5, pause_time=5):\n",
+        "    total_results = set()  # Use a set to store unique results\n",
+        "    num_batches = num_results // batch_size\n",
+        "\n",
+        "    for batch in range(num_batches):\n",
+        "        if len(total_results) >= num_results:\n",
+        "            break  # Stop fetching more results if the desired count is reached\n",
+        "\n",
+        "        start_index = batch * batch_size\n",
+        "        end_index = start_index + batch_size\n",
+        "\n",
+        "        batch_results = list(search(query, num=batch_size, start=start_index, pause=pause_time))\n",
+        "\n",
+        "        total_results.update(batch_results)  # Add batch results to the set\n",
+        "\n",
+        "        time.sleep(pause_time)  # Pause between batches\n",
+        "\n",
+        "    return list(total_results)[:num_results]  # Convert set back to a list and limit the number of results\n",
+        "\n",
+        "# Example usage\n",
+        "query = \"ibm\"\n",
+        "results = fetch_search_results(query, num_results=100, batch_size=5, pause_time=1)\n",
+        "\n",
+        "# Print the search results\n",
+        "for result in results:\n",
+        "    print(result)"
+      ],
+      "metadata": {
+        "id": "lJv4AoEPInc7"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from googlesearch import search\n",
+        "import time\n",
+        "\n",
+        "def fetch_search_results(query, num_results=20, batch_size=5, pause_time=5):\n",
+        "    total_results = []\n",
+        "    num_batches = num_results // batch_size\n",
+        "\n",
+        "    for batch in range(num_batches):\n",
+        "        if len(total_results) >= num_results:\n",
+        "            break  # Stop fetching more results if the desired count is reached\n",
+        "\n",
+        "        start_index = batch * batch_size\n",
+        "        end_index = start_index + batch_size\n",
+        "\n",
+        "        batch_results = list(search(query, num=batch_size, start=start_index, pause=pause_time))\n",
+        "\n",
+        "        total_results.extend(batch_results)\n",
+        "\n",
+        "        time.sleep(pause_time)  # Pause between batches\n",
+        "\n",
+        "    return total_results\n",
+        "\n",
+        "# Example usage\n",
+        "query = \"ibm\"\n",
+        "results = fetch_search_results(query, num_results=20, batch_size=2, pause_time=5)\n",
+        "\n",
+        "# Print the search results\n",
+        "for result in results:\n",
+        "    print(result)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 396
+        },
+        "id": "o7UEjHk8jXJO",
+        "outputId": "445f25da-e2d1-43a3-d1a8-79c62539ad92"
+      },
+      "execution_count": 14,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "HTTPError",
+          "evalue": "ignored",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mHTTPError\u001b[0m                                 Traceback (most recent call last)",
+            "\u001b[0;32m<ipython-input-14-68f601373fff>\u001b[0m in \u001b[0;36m<cell line: 25>\u001b[0;34m()\u001b[0m\n\u001b[1;32m     23\u001b[0m \u001b[0;31m# Example usage\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     24\u001b[0m \u001b[0mquery\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m\"ibm\"\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 25\u001b[0;31m \u001b[0mresults\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mfetch_search_results\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mquery\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnum_results\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m20\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mbatch_size\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m2\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mpause_time\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m5\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     26\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     27\u001b[0m \u001b[0;31m# Print the search results\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m<ipython-input-14-68f601373fff>\u001b[0m in \u001b[0;36mfetch_search_results\u001b[0;34m(query, num_results, batch_size, pause_time)\u001b[0m\n\u001b[1;32m     13\u001b[0m         \u001b[0mend_index\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mstart_index\u001b[0m \u001b[0;34m+\u001b[0m \u001b[0mbatch_size\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     14\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 15\u001b[0;31m         \u001b[0mbatch_results\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mlist\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0msearch\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mquery\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mnum\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mbatch_size\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mstart\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mstart_index\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mpause\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mpause_time\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     16\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     17\u001b[0m         \u001b[0mtotal_results\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mextend\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mbatch_results\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.10/dist-packages/googlesearch/__init__.py\u001b[0m in \u001b[0;36msearch\u001b[0;34m(query, tld, lang, tbs, safe, num, start, stop, domains, pause, tpe, country, extra_params, user_agent)\u001b[0m\n\u001b[1;32m    310\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    311\u001b[0m         \u001b[0;31m# Request the Google Search results page.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 312\u001b[0;31m         \u001b[0mhtml\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mget_page\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0murl\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0muser_agent\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    313\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    314\u001b[0m         \u001b[0;31m# Parse the response and get every anchored URL.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.10/dist-packages/googlesearch/__init__.py\u001b[0m in \u001b[0;36mget_page\u001b[0;34m(url, user_agent)\u001b[0m\n\u001b[1;32m    174\u001b[0m     \u001b[0mrequest\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0madd_header\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'User-Agent'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0muser_agent\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    175\u001b[0m     \u001b[0mcookie_jar\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0madd_cookie_header\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mrequest\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 176\u001b[0;31m     \u001b[0mresponse\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0murlopen\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mrequest\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    177\u001b[0m     \u001b[0mcookie_jar\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mextract_cookies\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mresponse\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mrequest\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    178\u001b[0m     \u001b[0mhtml\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mresponse\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mread\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/lib/python3.10/urllib/request.py\u001b[0m in \u001b[0;36murlopen\u001b[0;34m(url, data, timeout, cafile, capath, cadefault, context)\u001b[0m\n\u001b[1;32m    214\u001b[0m     \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    215\u001b[0m         \u001b[0mopener\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0m_opener\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 216\u001b[0;31m     \u001b[0;32mreturn\u001b[0m \u001b[0mopener\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mopen\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0murl\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdata\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mtimeout\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    217\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    218\u001b[0m \u001b[0;32mdef\u001b[0m \u001b[0minstall_opener\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mopener\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/lib/python3.10/urllib/request.py\u001b[0m in \u001b[0;36mopen\u001b[0;34m(self, fullurl, data, timeout)\u001b[0m\n\u001b[1;32m    523\u001b[0m         \u001b[0;32mfor\u001b[0m \u001b[0mprocessor\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mprocess_response\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mget\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mprotocol\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    524\u001b[0m             \u001b[0mmeth\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mgetattr\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mprocessor\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmeth_name\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 525\u001b[0;31m             \u001b[0mresponse\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mmeth\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mreq\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mresponse\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    526\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    527\u001b[0m         \u001b[0;32mreturn\u001b[0m \u001b[0mresponse\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/lib/python3.10/urllib/request.py\u001b[0m in \u001b[0;36mhttp_response\u001b[0;34m(self, request, response)\u001b[0m\n\u001b[1;32m    632\u001b[0m         \u001b[0;31m# request was successfully received, understood, and accepted.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    633\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0;32mnot\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0;36m200\u001b[0m \u001b[0;34m<=\u001b[0m \u001b[0mcode\u001b[0m \u001b[0;34m<\u001b[0m \u001b[0;36m300\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 634\u001b[0;31m             response = self.parent.error(\n\u001b[0m\u001b[1;32m    635\u001b[0m                 'http', request, response, code, msg, hdrs)\n\u001b[1;32m    636\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/lib/python3.10/urllib/request.py\u001b[0m in \u001b[0;36merror\u001b[0;34m(self, proto, *args)\u001b[0m\n\u001b[1;32m    555\u001b[0m             \u001b[0mhttp_err\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;36m0\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    556\u001b[0m         \u001b[0margs\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0mdict\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mproto\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmeth_name\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;34m+\u001b[0m \u001b[0margs\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 557\u001b[0;31m         \u001b[0mresult\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_call_chain\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0margs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    558\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mresult\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    559\u001b[0m             \u001b[0;32mreturn\u001b[0m \u001b[0mresult\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/lib/python3.10/urllib/request.py\u001b[0m in \u001b[0;36m_call_chain\u001b[0;34m(self, chain, kind, meth_name, *args)\u001b[0m\n\u001b[1;32m    494\u001b[0m         \u001b[0;32mfor\u001b[0m \u001b[0mhandler\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mhandlers\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    495\u001b[0m             \u001b[0mfunc\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mgetattr\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mhandler\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmeth_name\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 496\u001b[0;31m             \u001b[0mresult\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mfunc\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0margs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    497\u001b[0m             \u001b[0;32mif\u001b[0m \u001b[0mresult\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0;32mnot\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    498\u001b[0m                 \u001b[0;32mreturn\u001b[0m \u001b[0mresult\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/lib/python3.10/urllib/request.py\u001b[0m in \u001b[0;36mhttp_error_302\u001b[0;34m(self, req, fp, code, msg, headers)\u001b[0m\n\u001b[1;32m    747\u001b[0m         \u001b[0mfp\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mclose\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    748\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 749\u001b[0;31m         \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mparent\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mopen\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mnew\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mtimeout\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mreq\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtimeout\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    750\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    751\u001b[0m     \u001b[0mhttp_error_301\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mhttp_error_303\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mhttp_error_307\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mhttp_error_302\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/lib/python3.10/urllib/request.py\u001b[0m in \u001b[0;36mopen\u001b[0;34m(self, fullurl, data, timeout)\u001b[0m\n\u001b[1;32m    523\u001b[0m         \u001b[0;32mfor\u001b[0m \u001b[0mprocessor\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mprocess_response\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mget\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mprotocol\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    524\u001b[0m             \u001b[0mmeth\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mgetattr\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mprocessor\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmeth_name\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 525\u001b[0;31m             \u001b[0mresponse\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mmeth\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mreq\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mresponse\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    526\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    527\u001b[0m         \u001b[0;32mreturn\u001b[0m \u001b[0mresponse\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/lib/python3.10/urllib/request.py\u001b[0m in \u001b[0;36mhttp_response\u001b[0;34m(self, request, response)\u001b[0m\n\u001b[1;32m    632\u001b[0m         \u001b[0;31m# request was successfully received, understood, and accepted.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    633\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0;32mnot\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0;36m200\u001b[0m \u001b[0;34m<=\u001b[0m \u001b[0mcode\u001b[0m \u001b[0;34m<\u001b[0m \u001b[0;36m300\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 634\u001b[0;31m             response = self.parent.error(\n\u001b[0m\u001b[1;32m    635\u001b[0m                 'http', request, response, code, msg, hdrs)\n\u001b[1;32m    636\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/lib/python3.10/urllib/request.py\u001b[0m in \u001b[0;36merror\u001b[0;34m(self, proto, *args)\u001b[0m\n\u001b[1;32m    561\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mhttp_err\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    562\u001b[0m             \u001b[0margs\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0mdict\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'default'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'http_error_default'\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;34m+\u001b[0m \u001b[0morig_args\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 563\u001b[0;31m             \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_call_chain\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0margs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    564\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    565\u001b[0m \u001b[0;31m# XXX probably also want an abstract factory that knows when it makes\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/lib/python3.10/urllib/request.py\u001b[0m in \u001b[0;36m_call_chain\u001b[0;34m(self, chain, kind, meth_name, *args)\u001b[0m\n\u001b[1;32m    494\u001b[0m         \u001b[0;32mfor\u001b[0m \u001b[0mhandler\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mhandlers\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    495\u001b[0m             \u001b[0mfunc\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mgetattr\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mhandler\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmeth_name\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 496\u001b[0;31m             \u001b[0mresult\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mfunc\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0margs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    497\u001b[0m             \u001b[0;32mif\u001b[0m \u001b[0mresult\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0;32mnot\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    498\u001b[0m                 \u001b[0;32mreturn\u001b[0m \u001b[0mresult\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/lib/python3.10/urllib/request.py\u001b[0m in \u001b[0;36mhttp_error_default\u001b[0;34m(self, req, fp, code, msg, hdrs)\u001b[0m\n\u001b[1;32m    641\u001b[0m \u001b[0;32mclass\u001b[0m \u001b[0mHTTPDefaultErrorHandler\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mBaseHandler\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    642\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mhttp_error_default\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mreq\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfp\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mcode\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmsg\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mhdrs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 643\u001b[0;31m         \u001b[0;32mraise\u001b[0m \u001b[0mHTTPError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mreq\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfull_url\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mcode\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmsg\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mhdrs\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfp\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    644\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    645\u001b[0m \u001b[0;32mclass\u001b[0m \u001b[0mHTTPRedirectHandler\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mBaseHandler\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mHTTPError\u001b[0m: HTTP Error 429: Too Many Requests"
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyNYZHMb3jszKsHSgjtbhuyZ",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
